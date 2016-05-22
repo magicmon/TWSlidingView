@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'TWSlidingView_Example' do
+  pod 'TWSlidingView', :path => '../'
+
+  target 'TWSlidingView_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end

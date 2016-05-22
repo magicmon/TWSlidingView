@@ -1,0 +1,16 @@
+PODS:
+  - TWSlidingView (0.1.0)
+
+DEPENDENCIES:
+  - TWSlidingView (from `../`)
+
+EXTERNAL SOURCES:
+  TWSlidingView:
+    :path: ../
+
+SPEC CHECKSUMS:
+  TWSlidingView: f96b94ce1c0109f7aaf3b22de0c568249591d4ec
+
+PODFILE CHECKSUM: 08060af3ad61d7e83b8996084882bb47667e0466
+
+COCOAPODS: 1.0.0
