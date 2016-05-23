@@ -8,30 +8,34 @@
 
 import UIKit
 
-enum TWSlidingType {
+public enum TWSlidingType {
     case Normal
     case ZoomOut
     case Depth
 }
 
-class TWSlidingView: UIView, UIScrollViewDelegate {
+public class TWSlidingView: UIView, UIScrollViewDelegate {
     
     var scrollView: UIScrollView!
     var viewList: [UIView] = []
     var beginOffsetX: CGFloat = 0.0
     var currentPage: Int = 0
-    let kSlidingZoom: CGFloat = 0.9
-    let kSlidingAlpha: CGFloat = 0.6
     
-    var slidingType: TWSlidingType = .Normal
+    public var zoomScale: CGFloat = 0.9
+    public var slidingAlpha: CGFloat = 0.6
+    public var slidingType: TWSlidingType = .Normal
     
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     
-    override init(frame: CGRect) {
+    override public init(frame: CGRect) {
         super.init(frame: frame)
         
+        commonInit()
+    }
+    
+    func commonInit() {
         scrollView = UIScrollView(frame: CGRectMake(0, 0, frame.width, frame.height))
         scrollView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
         scrollView.delegate = self
@@ -45,7 +49,7 @@ class TWSlidingView: UIView, UIScrollViewDelegate {
         self.addSubview(scrollView)
     }
     
-    func addChildView(childView: UIView) {
+    public func addChildView(childView: UIView) {
         
         let width = self.bounds.width
         let height = self.bounds.height
@@ -59,7 +63,7 @@ class TWSlidingView: UIView, UIScrollViewDelegate {
     }
     
     //MARK: - UIScrollViewDelegate
-    func scrollViewDidScroll(scrollView: UIScrollView) {
+    public func scrollViewDidScroll(scrollView: UIScrollView) {
         
         let pageWidth = scrollView.frame.size.width
         let offsetX = scrollView.contentOffset.x
@@ -117,19 +121,19 @@ class TWSlidingView: UIView, UIScrollViewDelegate {
         }
     }
     
-    func scrollViewWillBeginDragging(scrollView: UIScrollView) {
+    public func scrollViewWillBeginDragging(scrollView: UIScrollView) {
         
         self.currentPage = calculateCurrentPage()
         self.beginOffsetX = scrollView.bounds.width * CGFloat(self.currentPage)
     }
     
     
-    func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
+    public func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
         
         stoppedScrolling()
     }
     
-    func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+    public func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         
         if !decelerate {
             stoppedScrolling()
@@ -182,15 +186,15 @@ class TWSlidingView: UIView, UIScrollViewDelegate {
     private func updateZoomOutView(sourceView: UIView?, destView: UIView?, progress: CGFloat) {
         
         if let sourceView = sourceView {
-            let sourceZoom = 1 - (1 - kSlidingZoom) * progress
+            let sourceZoom = 1 - (1 - zoomScale) * progress
             sourceView.transform = CGAffineTransformMakeScale(sourceZoom, sourceZoom)
-            sourceView.alpha = 1 - progress * (1 - kSlidingAlpha)
+            sourceView.alpha = 1 - progress * (1 - slidingAlpha)
         }
         
         if let destView = destView {
-            let destZoom = kSlidingZoom + (1 - kSlidingZoom) * progress
+            let destZoom = zoomScale + (1 - zoomScale) * progress
             destView.transform = CGAffineTransformMakeScale(destZoom, destZoom)
-            destView.alpha = kSlidingAlpha + (1 - kSlidingAlpha) * progress
+            destView.alpha = slidingAlpha + (1 - slidingAlpha) * progress
         }
     }
     
@@ -200,11 +204,11 @@ class TWSlidingView: UIView, UIScrollViewDelegate {
         var destViewAlpha: CGFloat = 1.0
         
         if progress < 0 {
-            destViewZoom = kSlidingZoom - (1 - kSlidingZoom) * progress
-            destViewAlpha = kSlidingAlpha - (1 - kSlidingAlpha) * progress
+            destViewZoom = zoomScale - (1 - zoomScale) * progress
+            destViewAlpha = slidingAlpha - (1 - slidingAlpha) * progress
         } else if progress > 0 {
-            destViewZoom = 1 - (1 - kSlidingZoom) * progress
-            destViewAlpha = 1 - (1 - kSlidingAlpha) * progress
+            destViewZoom = 1 - (1 - zoomScale) * progress
+            destViewAlpha = 1 - (1 - slidingAlpha) * progress
         }
         
         destView?.alpha = destViewAlpha
